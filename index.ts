@@ -12,6 +12,6 @@ server.get("/mmd", (_, res) => {
   res.send("Hello Mmd \n")
 })
 
-const PORT = 80
+const PORT = process.env["PORT"]
 
 server.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`))
