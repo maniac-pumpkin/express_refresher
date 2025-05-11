@@ -1,0 +1,22 @@
+{
+  "name": "express_refresher",
+  "version": "1.0.0",
+  "license": "ISC",
+  "main": "index.ts",
+  "scripts": {
+    "start": "tsx watch --env-file=.env.local ./index.ts"
+  },
+  "dependencies": {
+    "compression": "^1.8.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.17",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
