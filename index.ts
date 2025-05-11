@@ -3,11 +3,13 @@ import express from "express"
 const server = express()
 
 server.get("/", (_, res) => {
-  res.send("Hello")
+  res.setHeader("Content-Type", "text/plain")
+  res.send("Hello \n")
 })
 
 server.get("/mmd", (_, res) => {
-  res.send("Hello Mmd")
+  res.setHeader("Content-Type", "text/plain")
+  res.send("Hello Mmd \n")
 })
 
 const PORT = 80
