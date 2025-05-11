@@ -4,12 +4,12 @@ const server = express()
 
 server.get("/", (_, res) => {
   res.setHeader("Content-Type", "text/plain")
-  res.send("Hello \n")
+  res.send("Hello testing............ \n")
 })
 
 server.get("/mmd", (_, res) => {
   res.setHeader("Content-Type", "text/plain")
-  res.send("Hello Mmd \n")
+  res.send("Sup mmd \n")
 })
 
 const PORT = process.env["PORT"]
