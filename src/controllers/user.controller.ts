@@ -8,11 +8,6 @@ const prisma = new PrismaClient()
 
 export const userSignup: RequestHandler = async (req, res) => {
   try {
-    if (!req.body.email || !req.body.password) {
-      res.status(400).send("Email and password are required.")
-      return
-    }
-
     const hashedPassword = await encrypt(req.body.password)
 
     const createdUser = await prisma.users.create({
@@ -35,11 +30,6 @@ export const userSignup: RequestHandler = async (req, res) => {
 
 export const userSignin: RequestHandler = async (req, res) => {
   try {
-    if (!req.body.email || !req.body.password) {
-      res.status(400).send("Email and password are required.")
-      return
-    }
-
     const foundedUser = await prisma.users.findFirst({ where: { email: req.body.email } })
 
     if (!foundedUser || !(await compare(req.body.password, foundedUser.password))) {

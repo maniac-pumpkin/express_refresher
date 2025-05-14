@@ -12,7 +12,15 @@ const middlewares = [
   json(),
   urlencoded({ extended: true }),
   cors(),
-  fileUpload(),
+  fileUpload({
+    limits: { fileSize: 200 * 1024 },
+    abortOnLimit: true,
+    safeFileNames: true,
+    preserveExtension: true,
+    limitHandler: (_, res) => {
+      res.status(413).send("File size exceeds 200KB limit")
+    },
+  }),
 ]
 
 export default middlewares
