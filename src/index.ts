@@ -10,7 +10,7 @@ server.use(middlewares)
 server.use("/user", userRoute)
 server.use("/image", imageRoute)
 server.use((_, res) => {
-  res.status(404).send("Not Found")
+  res.status(404).send("Route not found.")
 })
 
 const PORT = process.env["PORT"]
