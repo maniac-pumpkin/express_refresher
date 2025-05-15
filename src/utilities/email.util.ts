@@ -1,8 +1,6 @@
-import nodemailer from "nodemailer"
-import { PrismaClient } from "@prisma/client"
+import { insertIntoVC } from "@prisma/db-actions"
 import crypto from "node:crypto"
-
-const prisma = new PrismaClient()
+import nodemailer from "nodemailer"
 
 const EMAIL_USERNAME = process.env["EMAIL_USERNAME"]
 const EMAIL_PASSWORD = process.env["EMAIL_PASSWORD"]
@@ -38,14 +36,12 @@ export const sendVerificationLink = async (userId: string, email: string) => {
 
     const generatedUUID = crypto.randomUUID()
 
-    await prisma.emailVerification.create({
-      data: { expirationDate, verificationUrl: generatedUUID, userId },
-    })
+    await insertIntoVC(expirationDate, generatedUUID, userId)
 
     await sendMail(
       email,
       "Verification code",
-      `${process.env["BASE_URL"]}:${process.env["PORT"]}/user/verify/${generatedUUID}`
+      `${process.env["BASE_URL"]}:${process.env["PORT"]}/user/verify/${generatedUUID}`,
     )
 
     return true

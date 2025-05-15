@@ -5,6 +5,14 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "esModuleInterop": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@controllers/*": ["controllers/*"],
+      "@middleware/*": ["middleware/*"],
+      "@utilities/*": ["utilities/*"],
+      "@prisma/*": ["../prisma/*"],
+      "@routes/*": ["routes/*"]
+    }
   }
 }

@@ -1,6 +1,6 @@
+import { imageGet, imageUpload } from "@controllers/image.controller"
+import resolveToken from "@middleware/resolve-token.mw"
 import { Router } from "express"
-import resolveToken from "../middleware/resolve-token.mw"
-import { imageGet, imageUpload } from "../controllers/image.controller"
 
 const route = Router()
 

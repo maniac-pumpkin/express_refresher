@@ -1,23 +1,18 @@
-import { RequestHandler } from "express"
-import { PrismaClient } from "@prisma/client"
-import { compare, encrypt } from "../utilities/encrypt.util"
-import { sendVerificationLink } from "../utilities/email.util"
-import { signJwToken } from "../utilities/jwt-util"
+import { findUserByEmail, findVerificationUrl, insertIntoUser, updateUserToVerifyById } from "@prisma/db-actions"
+import { sendVerificationLink } from "@utilities/email.util"
+import { compare, encrypt, signJwToken } from "@utilities/encrypt.util"
+import type { Request, Response } from "express"
 
-const prisma = new PrismaClient()
-
-export const userSignup: RequestHandler = async (req, res) => {
+export async function userSignup(req: Request, res: Response) {
   try {
     const hashedPassword = await encrypt(req.body.password)
 
-    const createdUser = await prisma.users.create({
-      data: { email: req.body.email, password: hashedPassword, isVerified: false },
-    })
+    const createdUser = await insertIntoUser(req.body.email, hashedPassword)
 
     const isOk = await sendVerificationLink(createdUser.id, req.body.email)
 
     if (!isOk) {
-      res.status(500).send("Failed to send verification email. Please try again later.")
+      res.status(500).send("Failed to send verification email.")
       return
     }
 
@@ -28,9 +23,9 @@ export const userSignup: RequestHandler = async (req, res) => {
   }
 }
 
-export const userSignin: RequestHandler = async (req, res) => {
+export async function userSignin(req: Request, res: Response) {
   try {
-    const foundedUser = await prisma.users.findFirst({ where: { email: req.body.email } })
+    const foundedUser = await findUserByEmail(req.body.email)
 
     if (!foundedUser || !(await compare(req.body.password, foundedUser.password))) {
       res.status(401).send("Invalid email or password.")
@@ -39,27 +34,29 @@ export const userSignin: RequestHandler = async (req, res) => {
 
     if (!foundedUser.isVerified) {
       await sendVerificationLink(foundedUser.id, req.body.email)
-      res.status(403).send("Your email is not verified. A new verification link has been sent to your email.")
+      res.status(403).send("Your email is not verified. A new verification link has been sent.")
       return
     }
 
-    res.status(200).send(signJwToken(foundedUser.id))
+    const token = signJwToken(foundedUser.id)
+
+    res.status(200).send(token)
   } catch (error) {
     res.sendStatus(500)
     console.error(error)
   }
 }
 
-export const userVerify: RequestHandler = async (req, res) => {
+export async function userVerify(req: Request, res: Response) {
   try {
-    const foundedInfo = await prisma.emailVerification.findFirstOrThrow({ where: { verificationUrl: req.params.uuid } })
+    const foundedInfo = await findVerificationUrl(req.params.uuid)
 
     if (Date.now() > foundedInfo.expirationDate.getTime()) {
-      res.status(410).send("The verification link has expired. Please request a new one.")
+      res.status(410).send("The verification link has expired.")
       return
     }
 
-    await prisma.users.update({ data: { isVerified: true }, where: { id: foundedInfo.userId } })
+    await updateUserToVerifyById(foundedInfo.userId)
 
     res.status(200).send("Email verified.")
   } catch (error) {

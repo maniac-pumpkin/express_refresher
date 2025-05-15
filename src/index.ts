@@ -1,8 +1,7 @@
 import express from "express"
 import middlewares from "./middleware"
-
-import userRoute from "./routes/user.route"
 import imageRoute from "./routes/image.route"
+import userRoute from "./routes/user.route"
 
 const server = express()
 

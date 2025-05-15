@@ -1,5 +1,5 @@
+import { verifyJwToken } from "@utilities/encrypt.util"
 import { RequestHandler } from "express"
-import { verifyJwToken } from "../utilities/jwt-util"
 
 const resolveToken: RequestHandler = (req, res, next) => {
   try {

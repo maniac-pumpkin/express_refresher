@@ -1,16 +1,14 @@
-import type { RequestHandler } from "express"
-import { PrismaClient } from "@prisma/client"
+import { findImagesByUserId, insertIntoImage } from "@prisma/db-actions"
+import type { Request, Response } from "express"
 
-const prisma = new PrismaClient()
-
-export const imageUpload: RequestHandler = async (req, res) => {
+export async function imageUpload(req: Request, res: Response) {
   try {
     const imageFile = req.files.image
     // @ts-ignore
     const base64Data = imageFile.data.toString("base64")
     const image = `data:image/png;base64,${base64Data}`
 
-    await prisma.images.create({ data: { imgSrc: image, userId: req.body.userId } })
+    await insertIntoImage(image, req.body.userId)
 
     res.status(201).send("Image uploaded successfully.")
   } catch (error) {
@@ -19,9 +17,9 @@ export const imageUpload: RequestHandler = async (req, res) => {
   }
 }
 
-export const imageGet: RequestHandler = async (req, res) => {
+export async function imageGet(req: Request, res: Response) {
   try {
-    const imagesByUser = await prisma.images.findMany({ where: { userId: req.body.userId } })
+    const imagesByUser = await findImagesByUserId(req.body.userId)
 
     res.status(200).json(imagesByUser)
   } catch (error) {
