@@ -6,6 +6,11 @@ import userRoute from "./routes/user.route"
 const server = express()
 
 server.use(middlewares)
+server.get("/", (_, res) => {
+  res.send(
+    "They loud and obnoxious, they like music that rhymes, they're 13% of population and commit half of the crimes. Who are they?",
+  )
+})
 server.use("/user", userRoute)
 server.use("/image", imageRoute)
 server.use((_, res) => {
