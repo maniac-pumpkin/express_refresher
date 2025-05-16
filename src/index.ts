@@ -8,7 +8,7 @@ const server = express()
 server.use(middlewares)
 server.get("/", (_, res) => {
   res.send(
-    "They loud and obnoxious, they like music that rhymes, they're 13% of population and commit half of the crimes. Who are they?",
+    "They're loud and obnoxious, they like music that rhymes, they're 13% of population and commit half of the crimes. Who are they?",
   )
 })
 server.use("/user", userRoute)
